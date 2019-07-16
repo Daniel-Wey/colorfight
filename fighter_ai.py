@@ -47,6 +47,8 @@ if game.register(username = 'Hybezz', \
 
         me = game.me
 
+        #DW: game commands begin here:
+
         # game.me.cells is a dict, where the keys are Position and the values
         # are MapCell. Get all my cells.
         for cell in game.me.cells.values():
@@ -57,17 +59,19 @@ if game.register(username = 'Hybezz', \
                 # Attack if the cost is less than what I have, and the owner
                 # is not mine, and I have not attacked it in this round already
                 # We also try to keep our cell number under 100 to avoid tax
-                if c.attack_cost < me.energy and c.owner != game.uid \
+                #DW: buffer attack_cost with additional constant for forcefield
+                buffer_cost = 10
+                if (c.attack_cost + buffer_cost) < me.energy and c.owner != game.uid \
                         and c.position not in my_attack_list \
                         and len(me.cells) < 95:
                     # Add the attack command in the command list
-                    # Subtract the attack cost manually so I can keep track
+                    # Subtract the attack cost and the buffer cost manually so I can keep track
                     # of the energy I have.
                     # Add the position to the attack list so I won't attack
                     # the same cell
-                    cmd_list.append(game.attack(pos, c.attack_cost))
+                    cmd_list.append(game.attack(pos, c.attack_cost + buffer_cost))
                     print("We are attacking ({}, {}) with {} energy".format(pos.x, pos.y, c.attack_cost))
-                    game.me.energy -= c.attack_cost
+                    game.me.energy -= c.attack_cost + buffer_cost
                     my_attack_list.append(c.position)
 
             # If we can upgrade the building, upgrade it.
