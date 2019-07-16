@@ -3,8 +3,7 @@ import time
 import random
 from colorfight.constants import BLD_GOLD_MINE, BLD_ENERGY_WELL, BLD_FORTRESS, BUILDING_COST
 
-# Create a Colorfight Instance. This will be the object that you interact
-# with.
+
 game = Colorfight()
 
 # Connect to the server. This will connect to the public room. If you want to
@@ -47,25 +46,17 @@ if game.register(username = 'Hybezz', \
 
         me = game.me
 
-        #DW: game commands begin here:
+        """ Game Commands Begin Here: """
 
         # game.me.cells is a dict, where the keys are Position and the values
         # are MapCell. Get all my cells.
 
-        """
-        1. find the home cell
-        2. sort cells based on distance away from the home cell
-        3. process this order into a new queue of cells
-        4. run the command algorithm off this order
-        """
-
-        # searches for  home cell among current cells
-        # saves the position of the home cell
-        home = 0
+        # searches for home cell among current cells
+        # and saves  position of  home cell
+        home_pos = 0
         for cell in game.me.cells.values():
             if cell.building.name == 'home':
-                home = cell
-        home_pos = home.position.info()
+                home_pos = cell.position.info()
 
         # places the different cells into a dicitonary based off their manhattan
         # distance from the home cell
@@ -86,10 +77,10 @@ if game.register(username = 'Hybezz', \
                 for pos in cell.position.get_surrounding_cardinals():
                     # Get the MapCell object of that position
                     c = game.game_map[pos]
+
                     # Attack if the cost is less than what I have, and the owner
                     # is not mine, and I have not attacked it in this round already
-                    # We also try to keep our cell number under 100 to avoid tax
-                    #DW: buffer attack_cost with additional constant for forcefield
+                    # [DW] buffer attack_cost with additional constant for forcefield
                     buffer_cost = 10
                     if (c.attack_cost + buffer_cost) < me.energy and c.owner != game.uid \
                             and c.position not in my_attack_list \
@@ -104,6 +95,8 @@ if game.register(username = 'Hybezz', \
                         game.me.energy -= c.attack_cost + buffer_cost
                         my_attack_list.append(c.position)
 
+
+                # [Determine relevant behavior for choosing which buildings to upgrade based on home / type of building / resource bounds]
                 # If we can upgrade the building, upgrade it.
                 # Notice can_update only checks for upper bound. You need to check
                 # tech_level by yourself. 
@@ -116,6 +109,8 @@ if game.register(username = 'Hybezz', \
                     me.gold   -= cell.building.upgrade_gold
                     me.energy -= cell.building.upgrade_energy
                     
+
+                # [Eventually determine which building to build given the position of cell / demands / strategy at hand]
                 # Build a random building if we have enough gold
                 if cell.owner == me.uid and cell.building.is_empty and me.gold >= BUILDING_COST[0]:
                     building = random.choice([BLD_FORTRESS, BLD_GOLD_MINE, BLD_ENERGY_WELL])
