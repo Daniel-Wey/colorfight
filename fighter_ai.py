@@ -3,7 +3,6 @@ import time
 import random
 from colorfight.constants import BLD_GOLD_MINE, BLD_ENERGY_WELL, BLD_FORTRESS, BUILDING_COST
 
-
 game = Colorfight()
 
 # Connect to the server. Designate argument for the room
@@ -13,12 +12,23 @@ game.connect(room = 'public')
 # input relevant username and pw
 if game.register(username = input("What is your username? "), \
         password = input("What is your password? ")):
+
+    # Determines the growth of the colony
+    # Increments by one every X number of rounds for which no command is executed
+    scaling_factor = 1
+
+    # Counts number of turns where no commands were executed
+    no_growth = 0
+
     # This is the game loop
     while True:
         # The command list we will send to the server
         cmd_list = []
+
+
         # The list of cells that we want to attack
         my_attack_list = []
+
         # update_turn() is required to get the latest information from the
         # server. This will halt the program until it receives the updated
         # information. 
@@ -76,9 +86,13 @@ if game.register(username = input("What is your username? "), \
                     # is not mine, and I have not attacked it in this round already
                     # [DW] buffer attack_cost with additional constant for forcefield
                     buffer_cost = 10
+
+                    # determines the growth of capacity per unit of scaling_factor
+                    advancement_factor = 75
+
                     if (c.attack_cost + buffer_cost) < me.energy and c.owner != game.uid \
                             and c.position not in my_attack_list \
-                            and len(me.cells) < 95:
+                            and len(me.cells) < advancement_factor * scaling_factor:
                         # Add the attack command in the command list
                         # Subtract the attack cost and the buffer cost manually so I can keep track
                         # of the energy I have.
@@ -105,6 +119,7 @@ if game.register(username = input("What is your username? "), \
                     
 
                 # [Eventually determine which building to build given the position of cell / demands / strategy at hand]
+                # [Eventually determine the proportions of the different buildings for energy, gold, protection/power]
                 # Build a random building if we have enough gold
                 if cell.owner == me.uid and cell.building.is_empty and me.gold >= BUILDING_COST[0]:
                     building = random.choice([BLD_FORTRESS, BLD_GOLD_MINE, BLD_ENERGY_WELL])
@@ -112,8 +127,17 @@ if game.register(username = input("What is your username? "), \
                     print("We build {} on ({}, {})".format(building, cell.position.x, cell.position.y))
                     me.gold -= 100
         
+        # if no commands were sent in this round, increment the scaling factor to enable the colony to grow
+        if len(cmd_list) == 0:
+            no_growth += 1
+            # determine number of stagnant rounds before capacity grows
+            if no_growth == 8:
+                scaling_factor += 1
+                no_growth = 0
+
         # Send the command list to the server
         result = game.send_cmd(cmd_list)
         print(result)
+        print("This is the scaling factor: {}".format(scaling_factor))
 else:
     print("The username and password you entered is invalid.")
