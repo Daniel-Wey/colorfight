@@ -6,19 +6,13 @@ from colorfight.constants import BLD_GOLD_MINE, BLD_ENERGY_WELL, BLD_FORTRESS, B
 
 game = Colorfight()
 
-# Connect to the server. This will connect to the public room. If you want to
-# join other rooms, you need to change the argument
+# Connect to the server. Designate argument for the room
 game.connect(room = 'public')
 
 # game.register should return True if succeed.
-# As no duplicate usernames are allowed, a random integer string is appended
-# to the example username. You don't need to do this, change the username
-# to your ID.
-# You need to set a password. For the example AI, the current time is used
-# as the password. You should change it to something that will not change 
-# between runs so you can continue the game if disconnected.
-if game.register(username = 'Hybezz', \
-        password = 'danw6824151'):
+# input relevant username and pw
+if game.register(username = input("What is your username? "), \
+        password = input("What is your password? ")):
     # This is the game loop
     while True:
         # The command list we will send to the server
@@ -121,3 +115,5 @@ if game.register(username = 'Hybezz', \
         # Send the command list to the server
         result = game.send_cmd(cmd_list)
         print(result)
+else:
+    print("The username and password you entered is invalid.")
