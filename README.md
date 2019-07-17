@@ -9,3 +9,7 @@ install all the python package requirements.
 # Run the bot
 
 ```python3 example_ai.py```
+
+```OR```
+
+```python3 fighter_ai.py```
