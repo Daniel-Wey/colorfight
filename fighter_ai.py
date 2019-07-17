@@ -13,12 +13,19 @@ game.connect(room = 'public')
 # input relevant username and pw
 if game.register(username = input("What is your username? "), \
         password = input("What is your password? ")):
+
+    # Determines the growth of the colony
+    # Increments by one every round for which no command is executed
+    scaling_factor = 1
+    
     # This is the game loop
     while True:
         # The command list we will send to the server
         cmd_list = []
+
         # The list of cells that we want to attack
         my_attack_list = []
+
         # update_turn() is required to get the latest information from the
         # server. This will halt the program until it receives the updated
         # information. 
@@ -78,7 +85,7 @@ if game.register(username = input("What is your username? "), \
                     buffer_cost = 10
                     if (c.attack_cost + buffer_cost) < me.energy and c.owner != game.uid \
                             and c.position not in my_attack_list \
-                            and len(me.cells) < 95:
+                            and len(me.cells) < 75 * scaling_factor:
                         # Add the attack command in the command list
                         # Subtract the attack cost and the buffer cost manually so I can keep track
                         # of the energy I have.
@@ -112,8 +119,13 @@ if game.register(username = input("What is your username? "), \
                     print("We build {} on ({}, {})".format(building, cell.position.x, cell.position.y))
                     me.gold -= 100
         
+        # if no commands were sent in this round, increment the scaling factor to enable the colony to grow
+        if len(cmd_list) == 0:
+            scaling_factor += 1
+
         # Send the command list to the server
         result = game.send_cmd(cmd_list)
         print(result)
+        print("This is the scaling factor: {}".format(scaling_factor))
 else:
     print("The username and password you entered is invalid.")
