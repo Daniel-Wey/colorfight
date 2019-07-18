@@ -10,8 +10,7 @@ game.connect(room = 'public')
 
 # game.register should return True if succeed.
 # input relevant username and pw
-if game.register(username = input("What is your username? "), \
-        password = input("What is your password? ")):
+if game.register(username = "Hybezz", password = "danw6824151"):
 
     # Determines the growth of the colony
     # Increments by one every X number of rounds for which no command is executed
@@ -117,6 +116,8 @@ if game.register(username = input("What is your username? "), \
                     me.gold   -= cell.building.upgrade_gold
                     me.energy -= cell.building.upgrade_energy
                     
+
+                
 
                 # [Eventually determine which building to build given the position of cell / demands / strategy at hand]
                 # [Eventually determine the proportions of the different buildings for energy, gold, protection/power]
