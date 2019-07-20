@@ -9,3 +9,9 @@ never get constructed in the first place.
 
 Considerations:
 - Between gold and energy, is one of the two resources more valuable?
+
+
+#2: Conquerer's approach:
+- Upgrade cells from the farther ones first, always advancing the line up until the cells that actually meet the opponent colonies
+
+#3: Does the colony need a cap on scaling at all?
