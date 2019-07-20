@@ -6,7 +6,7 @@ from colorfight.constants import BLD_GOLD_MINE, BLD_ENERGY_WELL, BLD_FORTRESS, B
 game = Colorfight()
 
 # Connect to the server. Designate argument for the room
-game.connect(room = 'public')
+game.connect(room = 'Musikverein')
 
 # game.register should return True if succeed.
 # input relevant username and pw
@@ -39,7 +39,8 @@ if game.register(username = "Hybezz", password = "danw6824151"):
         # a new game. You can add a infinite loop to continuously register
         # to the latest game and play.
         if game.turn < last_turn:
-            break
+            game.connect(room = 'Musikverein')
+            game.register(username = "Hybezz", password = "danw6824151")
 
         # Check if you exist in the game. If not, wait for the next round.
         # You may not appear immediately after you join. But you should be 
@@ -87,7 +88,7 @@ if game.register(username = "Hybezz", password = "danw6824151"):
                     buffer_cost = 10
 
                     # determines the growth of capacity per unit of scaling_factor
-                    advancement_factor = 75
+                    advancement_factor = 80
 
                     if (c.attack_cost + buffer_cost) < me.energy and c.owner != game.uid \
                             and c.position not in my_attack_list \
@@ -123,7 +124,11 @@ if game.register(username = "Hybezz", password = "danw6824151"):
                 # [Eventually determine the proportions of the different buildings for energy, gold, protection/power]
                 # Build a random building if we have enough gold
                 if cell.owner == me.uid and cell.building.is_empty and me.gold >= BUILDING_COST[0]:
-                    building = random.choice([BLD_FORTRESS, BLD_GOLD_MINE, BLD_ENERGY_WELL])
+                    building = None
+                    if game.turn < 150 and len(me.cells) < 150:
+                        building = random.choice([BLD_ENERGY_WELL, BLD_GOLD_MINE])
+                    else:
+                        building = random.choice([BLD_FORTRESS, BLD_GOLD_MINE, BLD_ENERGY_WELL])
                     cmd_list.append(game.build(cell.position, building))
                     print("We build {} on ({}, {})".format(building, cell.position.x, cell.position.y))
                     me.gold -= 100
@@ -132,7 +137,7 @@ if game.register(username = "Hybezz", password = "danw6824151"):
         if len(cmd_list) == 0:
             no_growth += 1
             # determine number of stagnant rounds before capacity grows
-            if no_growth == 8:
+            if no_growth == 6:
                 scaling_factor += 1
                 no_growth = 0
 
