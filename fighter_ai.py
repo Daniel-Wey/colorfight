@@ -23,7 +23,7 @@ if game.register(username = "Hybezz", password = "danw6824151"):
     growth_turn_ceiling = 200
 
     # number of cells spent scaling
-    growth_cell_ceiling = 200
+    growth_cell_ceiling = 300
 
     # This is the game loop
     while True:
@@ -47,6 +47,7 @@ if game.register(username = "Hybezz", password = "danw6824151"):
         if game.turn < last_turn:
             game.connect(room = 'Musikverein')
             game.register(username = "Hybezz", password = "danw6824151")
+            scaling_factor = 1
 
         # Check if you exist in the game. If not, wait for the next round.
         # You may not appear immediately after you join. But you should be 
