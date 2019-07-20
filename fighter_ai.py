@@ -19,6 +19,12 @@ if game.register(username = "Hybezz", password = "danw6824151"):
     # Counts number of turns where no commands were executed
     no_growth = 0
 
+    # number of turns spent scaling
+    growth_turn_ceiling = 200
+
+    # number of cells spent scaling
+    growth_cell_ceiling = 200
+
     # This is the game loop
     while True:
         # The command list we will send to the server
@@ -125,7 +131,7 @@ if game.register(username = "Hybezz", password = "danw6824151"):
                 # Build a random building if we have enough gold
                 if cell.owner == me.uid and cell.building.is_empty and me.gold >= BUILDING_COST[0]:
                     building = None
-                    if game.turn < 150 and len(me.cells) < 150:
+                    if game.turn < growth_turn_ceiling and len(me.cells) < growth_cell_ceiling:
                         building = random.choice([BLD_ENERGY_WELL, BLD_GOLD_MINE])
                     else:
                         building = random.choice([BLD_FORTRESS, BLD_GOLD_MINE, BLD_ENERGY_WELL])
