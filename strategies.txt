@@ -1,0 +1,20 @@
+Building construction:
+
+#1: if cell has no forcefield value, build a fortress. This would mean that every approximately every 1 in 5
+cells will contain a fortress. Split the other two cell spaces between gold and energy.
+
+Downsides: attacking with excess energy will lead to forcefields always being up. This would mean fortresses would
+never get constructed in the first place. 
+- Could be resolved by constructing a fortress if the forcefield does not cross a needed threshold value.
+
+Considerations:
+- Between gold and energy, is one of the two resources more valuable?
+
+
+#2: Conquerer's approach:
+- Upgrade cells from the farther ones first, always advancing the line up until the cells that actually meet the opponent colonies
+
+#3: Does the colony need a cap on scaling at all?
+
+Algorithm feature: decision tree
+- Determine by turn count, number of owned cells, number of buildings, distribution of resources
