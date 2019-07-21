@@ -20,7 +20,7 @@ if game.register(username = "Hybezz", password = "danw6824151"):
     no_growth = 0
 
     # number of turns spent scaling
-    growth_turn_ceiling = 170
+    growth_turn_ceiling = 150
 
     # number of cells spent scaling
     growth_cell_ceiling = 300
@@ -83,7 +83,7 @@ if game.register(username = "Hybezz", password = "danw6824151"):
         sorted_cells = sorted(new_order)
 
         # if turn exceeds 200, iterate from largest-lowest distance away
-        if game.turn > growth_turn_ceiling
+        if game.turn > growth_turn_ceiling and me.tech_level == 3:
             sorted_cells = reversed(sorted_cells)
 
         for distances in sorted_cells:
