@@ -25,6 +25,9 @@ if game.register(username = "Hybezz", password = "danw6824151"):
     # number of cells spent scaling
     growth_cell_ceiling = 300
 
+    # determines whether enemy home has been found:
+    home_found = False
+
     # This is the game loop
     while True:
         # The command list we will send to the server
@@ -103,8 +106,18 @@ if game.register(username = "Hybezz", password = "danw6824151"):
                     advancement_factor = 80
 
                     if (c.attack_cost + buffer_cost) < me.energy and c.owner != game.uid \
-                            and c.position not in my_attack_list \
-                            and len(me.cells) < advancement_factor * scaling_factor:
+                            and c.position not in my_attack_list and c.is_home:
+                            if c.attack_cost + 5000 < me.energy:
+                                cmd_list.append(game.attack(pos, c.attack_cost + 5000))
+                                print("We are attacking ({}, {}) with {} energy".format(pos.x, pos.y, c.attack_cost + 5000))
+                                game.me.energy -= c.attack_cost + 5000
+                                my_attack_list.append(c.position)
+                            else:
+                                home_found = True
+                                break
+
+                    elif (c.attack_cost + buffer_cost) < me.energy and c.owner != game.uid \
+                            and c.position not in my_attack_list:
                         # Add the attack command in the command list
                         # Subtract the attack cost and the buffer cost manually so I can keep track
                         # of the energy I have.
@@ -128,7 +141,8 @@ if game.register(username = "Hybezz", password = "danw6824151"):
                     print("We upgraded ({}, {})".format(cell.position.x, cell.position.y))
                     me.gold   -= cell.building.upgrade_gold
                     me.energy -= cell.building.upgrade_energy
-                    
+                if home_found:
+                    break 
 
                 
 
@@ -144,10 +158,16 @@ if game.register(username = "Hybezz", password = "danw6824151"):
                     cmd_list.append(game.build(cell.position, building))
                     print("We build {} on ({}, {})".format(building, cell.position.x, cell.position.y))
                     me.gold -= 100
+            if home_found:
+                break
+        
 
         # Send the command list to the server
         result = game.send_cmd(cmd_list)
         print(result)
-        print("This is the scaling factor: {}".format(scaling_factor))
+        print("Home found? {0}".format(home_found))
+
+        # need a means to target all attack power to the home if the enemy home is found
+        home_found = False
 else:
     print("The username and password you entered is invalid.")
