@@ -15,3 +15,11 @@ Considerations:
 - Upgrade cells from the farther ones first, always advancing the line up until the cells that actually meet the opponent colonies
 
 #3: Does the colony need a cap on scaling at all?
+
+Algorithm feature: decision tree
+- Determine by turn count, number of owned cells, number of buildings, distribution of resources
+
+#4 Cap cell growth until tech 3 is hit
+
+#5 centralize damage on the home base when found
+
