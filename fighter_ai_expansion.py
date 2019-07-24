@@ -14,7 +14,7 @@ if game.register(username = "Hybezz", password = "danw6824151"):
 
     # Determines the growth of the colony
     # Increments by one every X number of rounds for which no command is executed
-    scaling_factor = 1
+    scaling_factor = 100
 
     # Counts number of turns where no commands were executed
     no_growth = 0
@@ -47,7 +47,6 @@ if game.register(username = "Hybezz", password = "danw6824151"):
         if game.turn < last_turn:
             game.connect(room = 'Musikverein')
             game.register(username = "Hybezz", password = "danw6824151")
-            scaling_factor = 1
 
         # Check if you exist in the game. If not, wait for the next round.
         # You may not appear immediately after you join. But you should be 
@@ -139,14 +138,6 @@ if game.register(username = "Hybezz", password = "danw6824151"):
                     cmd_list.append(game.build(cell.position, building))
                     print("We build {} on ({}, {})".format(building, cell.position.x, cell.position.y))
                     me.gold -= 100
-        
-        # if no commands were sent in this round, increment the scaling factor to enable the colony to grow
-        if len(cmd_list) == 0:
-            no_growth += 1
-            # determine number of stagnant rounds before capacity grows
-            if no_growth == 6:
-                scaling_factor += 1
-                no_growth = 0
 
         # Send the command list to the server
         result = game.send_cmd(cmd_list)
